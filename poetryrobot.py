@@ -21,7 +21,10 @@ def poem_tweets():
     # - 40 results
     query += '&count=40'
     results = api.GetSearch(raw_query=query)
+    # - not too many hashtags
     results = list(filter(has_less_than_three_hashtags, results))
+    # - not reply tweets
+    results = list(filter(lambda t: not t.in_reply_to_status_id, results))
     return results
 
 def retweet_someone(tweets):
