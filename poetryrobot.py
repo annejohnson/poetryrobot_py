@@ -11,14 +11,14 @@ def has_less_than_three_hashtags(status):
     return status.text.count('#') <= 2
 
 def poem_tweets():
-    # - has a poetry or poem hashtag
+    # - have a poetry or poem hashtag
     # - 'safe' only
     # - no links
     # - no retweets
     query = 'q=%23poetry+OR+%23poem+filter%3Asafe+-filter%3Alinks+-filter%3Aretweets'
     # - English only
     query += '&lang=en'
-    # - 20 results
+    # - 40 results
     query += '&count=40'
     results = api.GetSearch(raw_query=query)
     results = list(filter(has_less_than_three_hashtags, results))
