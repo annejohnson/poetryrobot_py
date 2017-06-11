@@ -7,8 +7,8 @@ with open('credentials.json') as f:
 
 api = twitter.Api(**credentials)
 
-def has_less_than_three_hashtags(status):
-    return status.text.count('#') <= 2
+def has_less_than_three_hashtags(tweet):
+    return len(tweet.hashtags) <= 2
 
 def poem_tweets():
     # - have a poetry or poem hashtag
@@ -44,8 +44,6 @@ def follow_followers():
         api.CreateFriendship(follower.id)
 
 def follow_someone(tweets):
-    if not tweets:
-        return False
     users = list(map(lambda t: t.user, tweets))
     followable_users = list(filter(user_is_followable, users))
     if not followable_users:
