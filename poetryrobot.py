@@ -33,21 +33,24 @@ def retweet_someone(tweets):
     status_to_retweet = max(tweets, key=lambda status: status.favorite_count + status.retweet_count)
     api.PostRetweet(status_to_retweet.id)
 
+def user_is_followable(user):
+    return not user.following and not user.protected
+
 def follow_followers():
     (_, _, recent_followers) = api.GetFollowersPaged()
-    followers_not_followed_yet = list(filter(lambda f: not f.following, recent_followers))
+    followable_followers = list(filter(user_is_followable, recent_followers))
     max_num_to_follow = 5
-    for follower in followers_not_followed_yet[0:max_num_to_follow]:
+    for follower in followable_followers[0:max_num_to_follow]:
         api.CreateFriendship(follower.id)
 
 def follow_someone(tweets):
     if not tweets:
         return False
     users = list(map(lambda t: t.user, tweets))
-    users_not_followed_yet = list(filter(lambda u: not u.following, users))
-    if not users_not_followed_yet:
+    followable_users = list(filter(user_is_followable, users))
+    if not followable_users:
         return False
-    user_to_follow = random.choice(users_not_followed_yet)
+    user_to_follow = random.choice(followable_users)
     api.CreateFriendship(user_to_follow.id)
 
 def reply_to_someone(tweets):
